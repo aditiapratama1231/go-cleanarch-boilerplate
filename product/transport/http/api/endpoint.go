@@ -6,7 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func NewProductHandler(route *gin.RouterGroup, pu product.Usecase) {
+// product route "/products/..."
+func ProductRoute(route *gin.RouterGroup, pu product.Usecase) {
 	handler := productHandler{
 		productUsecase: pu,
 	}

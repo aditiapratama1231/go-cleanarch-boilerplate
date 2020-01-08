@@ -6,9 +6,9 @@ import (
 	"os"
 
 	"product-microservice/config"
-	"product-microservice/product/repository"
-	"product-microservice/product/transport/http/api"
-	"product-microservice/product/usecase"
+	_productRepo "product-microservice/product/repository"
+	_productApi "product-microservice/product/transport/http/api"
+	_productUsecase "product-microservice/product/usecase"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -17,13 +17,16 @@ import (
 func main() {
 	router := gin.Default()
 
-	v1 := router.Group("/api/v1")
+	v1 := router.Group("/api/v1") // initial route
 
-	db := config.GetDB()
+	db := config.DBInit() // initial db configuration
 
-	_productRepo := repository.NewProductRepository(db)
-	_productUsecase := usecase.NewProductUsecase(_productRepo)
-	api.NewProductHandler(v1, _productUsecase)
+	// register repo and usecase
+	productRepo := _productRepo.NewProductRepository(db)             // initial product repository
+	productUsecase := _productUsecase.NewProductUsecase(productRepo) // initial product usecase
+
+	// register routing
+	_productApi.ProductRoute(v1, productUsecase)
 
 	e := godotenv.Load()
 	if e != nil {

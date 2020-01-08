@@ -4,54 +4,37 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"strconv"
+	"time"
 
-	_ "github.com/go-sql-driver/mysql"
 	"github.com/jinzhu/gorm"
 
-	_ "github.com/jinzhu/gorm/dialects/mysql"
-
+	_ "github.com/jinzhu/gorm/dialects/mysql" //for import mysql
 	"github.com/joho/godotenv"
 )
 
-var db *gorm.DB
-
-func init() {
-	var username string
-	var password string
-	var dbName string
-	var dbHost string
-
-	e := godotenv.Load()
+// DBInit create connection to database
+func DBInit() *gorm.DB {
+	e := godotenv.Load() //Load .env file
 	if e != nil {
-		log.Print(e)
+		fmt.Print(e)
 	}
 
-	if os.Getenv("GO_ENV") != "production" {
-		username = os.Getenv("DEV_DB_USER")
-		password = os.Getenv("DEV_DB_PASS")
-		dbName = os.Getenv("DEV_DB_NAME")
-		dbHost = os.Getenv("DEV_DB_HOST")
-	} else {
-		username = os.Getenv("PROD_DB_USER")
-		password = os.Getenv("PROD_DB_PASS")
-		dbName = os.Getenv("PROD_DB_NAME")
-		dbHost = os.Getenv("PROD_DB_HOST")
-	}
-
-	dbURI := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8mb4&parseTime=True&loc=Local", username, password, dbHost, dbName)
-	log.Println(dbURI)
-	conn, err := gorm.Open("mysql", dbURI)
-
+	host := os.Getenv("DB_HOST")
+	port := os.Getenv("DB_PORT")
+	username := os.Getenv("DB_USER")
+	password := os.Getenv("DB_PASSWORD")
+	dbName := os.Getenv("DB_NAME")
+	dbURI := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8&parseTime=True", username, password, host, port, dbName)
+	db, err := gorm.Open("mysql", dbURI)
 	if err != nil {
-		log.Println(err)
-		panic("failed to connect to database")
+		log.Panic("failed to connect to database")
 	}
-	conn.LogMode(true)
+	db.DB().SetConnMaxLifetime(time.Minute * 5)
+	db.DB().SetMaxIdleConns(0)
+	db.DB().SetMaxOpenConns(5)
 
-	db = conn
-}
-
-// GetDB getdb
-func GetDB() *gorm.DB {
+	debug, _ := strconv.ParseBool(os.Getenv("GORM_DEBUG"))
+	db.LogMode(debug)
 	return db
 }
