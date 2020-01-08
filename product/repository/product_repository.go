@@ -2,6 +2,8 @@ package repository
 
 import (
 	"github.com/jinzhu/gorm"
+	"product-microservice/domain"
+	"product-microservice/models"
 	"product-microservice/product"
 )
 
@@ -15,10 +17,20 @@ func NewProductRepository(DB *gorm.DB) product.Repository {
 	}
 }
 
-func (p *productRepository) CreateProduct() (interface{}, error) {
-	return nil, nil
+func (p *productRepository) CreateProduct(product domain.Product) interface{} {
+	_product := models.Product{
+		ProductName:        product.ProductName,
+		ProductDescription: product.ProductDescription,
+		Quantity:           product.Quantity,
+	}
+
+	p.DB.Create(&_product)
+	return nil
 }
 
-func (p *productRepository) ListProducts() (interface{}, error) {
-	return nil, nil
+func (p *productRepository) ListProducts() interface{} {
+	_product := []models.Product{}
+
+	p.DB.Find(&_product)
+	return _product
 }

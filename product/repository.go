@@ -1,6 +1,10 @@
 package product
 
+import (
+	"product-microservice/domain"
+)
+
 type Repository interface {
-	CreateProduct() (interface{}, error)
-	ListProducts() (interface{}, error)
+	CreateProduct(domain.Product) interface{}
+	ListProducts() interface{}
 }
