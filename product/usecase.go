@@ -6,6 +6,6 @@ import (
 )
 
 type Usecase interface {
-	CreateProduct(context.Context, domain.Product) interface{}
+	CreateProduct(context.Context, domain.Product) error
 	ListProducts(context.Context) (interface{}, error)
 }

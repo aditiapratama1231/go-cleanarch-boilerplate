@@ -31,7 +31,13 @@ func (ph *productHandler) CreateProduct(c *gin.Context) {
 		Quantity:           request.Data.Quantity,
 	}
 
-	ph.productUsecase.CreateProduct(c, product)
+	err := ph.productUsecase.CreateProduct(c, product)
+
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"message": "Error creating product" + err.Error(),
+		})
+	}
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "product successfully created",

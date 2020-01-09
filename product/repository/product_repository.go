@@ -19,14 +19,19 @@ func NewProductRepository(DB *gorm.DB) product.Repository {
 	}
 }
 
-func (p *productRepository) CreateProduct(ctx context.Context, product domain.Product) interface{} {
+func (p *productRepository) CreateProduct(ctx context.Context, product domain.Product) error {
 	_product := models.Product{
 		ProductName:        product.ProductName,
 		ProductDescription: product.ProductDescription,
 		Quantity:           product.Quantity,
 	}
 
-	p.DB.Create(&_product)
+	err := p.DB.Create(&_product).Error
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
 

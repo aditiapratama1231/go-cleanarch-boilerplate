@@ -19,8 +19,12 @@ func NewProductUsecase(productRepo product.Repository) product.Usecase {
 	}
 }
 
-func (p *productUsecase) CreateProduct(ctx context.Context, product domain.Product) interface{} {
-	p.productRepo.CreateProduct(ctx, product)
+func (p *productUsecase) CreateProduct(ctx context.Context, product domain.Product) error {
+	err := p.productRepo.CreateProduct(ctx, product)
+
+	if err != nil {
+		return err
+	}
 	return nil
 }
 
