@@ -1,7 +1,10 @@
 package usecase
 
 import (
+	"context"
+	"errors"
 	"product-microservice/product"
+	"time"
 
 	"product-microservice/domain"
 )
@@ -16,11 +19,22 @@ func NewProductUsecase(productRepo product.Repository) product.Usecase {
 	}
 }
 
-func (p *productUsecase) CreateProduct(product domain.Product) interface{} {
-	p.productRepo.CreateProduct(product)
+func (p *productUsecase) CreateProduct(ctx context.Context, product domain.Product) interface{} {
+	p.productRepo.CreateProduct(ctx, product)
 	return nil
 }
 
-func (p *productUsecase) ListProducts() interface{} {
-	return p.productRepo.ListProducts()
+func (p *productUsecase) ListProducts(c context.Context) (interface{}, error) {
+	ctx, cancel := context.WithTimeout(c, time.Second*2)
+	defer cancel()
+
+	products := p.productRepo.ListProducts(ctx)
+
+	select {
+	case <-ctx.Done():
+		return nil, errors.New("request timeout")
+	default:
+	}
+
+	return products, nil
 }

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"context"
 	"net/http"
 	"product-microservice/domain"
 	"product-microservice/product"
@@ -30,7 +31,7 @@ func (ph *productHandler) CreateProduct(c *gin.Context) {
 		Quantity:           request.Data.Quantity,
 	}
 
-	ph.productUsecase.CreateProduct(product)
+	ph.productUsecase.CreateProduct(c, product)
 
 	c.JSON(http.StatusCreated, gin.H{
 		"message": "product successfully created",
@@ -40,8 +41,19 @@ func (ph *productHandler) CreateProduct(c *gin.Context) {
 }
 
 func (ph *productHandler) ListProducts(c *gin.Context) {
-	products := ph.productUsecase.ListProducts()
+	ctx := c.Request.Context()
 
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	products, err := ph.productUsecase.ListProducts(ctx)
+	if err != nil {
+		c.JSON(http.StatusRequestTimeout, gin.H{
+			"message": "request timeout",
+		})
+		return
+	}
 	c.JSON(http.StatusOK, gin.H{
 		"data": products,
 	})
