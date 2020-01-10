@@ -16,6 +16,11 @@ Install all Libraries from go mod
 go get .
 ```
 
+create `.env` file
+```
+cp .env.example .env
+```
+
 ## Migration up
 
 Using soda to up our migration files in the `migrations` folder
