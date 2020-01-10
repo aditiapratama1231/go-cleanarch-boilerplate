@@ -8,4 +8,5 @@ import (
 type Usecase interface {
 	CreateProduct(context.Context, domain.Product) error
 	ListProducts(context.Context) (interface{}, error)
+	GetProductById(context.Context, string) (interface{}, error)
 }

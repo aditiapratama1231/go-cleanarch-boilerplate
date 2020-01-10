@@ -2,6 +2,7 @@ package repository
 
 import (
 	"context"
+	"errors"
 	"product-microservice/domain"
 	"product-microservice/models"
 	"product-microservice/product"
@@ -36,8 +37,18 @@ func (p *productRepository) CreateProduct(ctx context.Context, product domain.Pr
 }
 
 func (p *productRepository) ListProducts(ctx context.Context) interface{} {
-	_product := []models.Product{}
+	_products := []models.Product{}
 
-	p.DB.Find(&_product)
-	return _product
+	p.DB.Find(&_products)
+	return _products
+}
+
+func (p *productRepository) GetProductById(ctx context.Context, id string) (interface{}, error) {
+	product := models.Product{}
+
+	if p.DB.First(&product, id).RecordNotFound() {
+		return nil, errors.New("Cannot find product with id " + id)
+	}
+
+	return product, nil
 }

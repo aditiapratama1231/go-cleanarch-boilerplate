@@ -65,3 +65,26 @@ func (ph *productHandler) ListProducts(c *gin.Context) {
 	})
 	return
 }
+
+func (ph *productHandler) GetProductById(c *gin.Context) {
+	id := c.Param("id")
+	ctx := c.Request.Context()
+
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
+	product, err := ph.productUsecase.GetProductById(ctx, id)
+	if err != nil {
+		c.JSON(http.StatusNotFound, gin.H{
+			"message": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusAccepted, gin.H{
+		"message": "success",
+		"data":    product,
+	})
+	return
+}

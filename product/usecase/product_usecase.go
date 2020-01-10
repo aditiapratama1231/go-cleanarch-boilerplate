@@ -42,3 +42,13 @@ func (p *productUsecase) ListProducts(c context.Context) (interface{}, error) {
 
 	return products, nil
 }
+
+func (p *productUsecase) GetProductById(c context.Context, id string) (interface{}, error) {
+	product, err := p.productRepo.GetProductById(c, id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return product, nil
+}

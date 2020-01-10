@@ -16,5 +16,6 @@ func ProductRoute(route *gin.RouterGroup, pu product.Usecase) {
 	{
 		v1.GET("/", handler.ListProducts)
 		v1.POST("/", handler.CreateProduct)
+		v1.GET("/:id", handler.GetProductById)
 	}
 }
