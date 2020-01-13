@@ -28,3 +28,48 @@ Using soda to up our migration files in the `migrations` folder
 ```
 soda migrate up
 ```
+
+## Running App
+
+Root file in `main.go`
+
+```
+go run main.go
+```
+
+
+## API
+
+List Products
+
+```
+Request
+
+GET /api/v1/products
+```
+
+Show Product
+
+```
+Request
+
+GET /api/v1/product/{id}
+```
+
+Create new Product
+
+```
+Request 
+
+POST /api/v1/products
+
+Payload :
+
+{
+    "data": {
+        "product_name": "Example",
+        "product_description": "Example description",
+        "qty": 1 
+    }
+}
+```
