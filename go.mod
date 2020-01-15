@@ -8,4 +8,5 @@ require (
 	github.com/imroc/req v0.2.4
 	github.com/jinzhu/gorm v1.9.11
 	github.com/joho/godotenv v1.3.0
+	github.com/sirupsen/logrus v1.2.0
 )

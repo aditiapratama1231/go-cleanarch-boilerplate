@@ -1,5 +1,9 @@
 package create_product
 
+import (
+	domain "product-microservice/domain/entities"
+)
+
 type (
 	CreateProductRequest struct {
 		Data struct {
@@ -9,3 +13,11 @@ type (
 		}
 	}
 )
+
+func RequestMapper(req CreateProductRequest) domain.Product {
+	return domain.Product{
+		ProductName:        req.Data.ProductName,
+		ProductDescription: req.Data.ProductDescription,
+		Quantity:           req.Data.Quantity,
+	}
+}

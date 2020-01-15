@@ -11,8 +11,11 @@ import (
 	_http "product-microservice/infrastructure/transport/http"
 
 	// actual class
-	_createProduct "product-microservice/application/use_case/product/create_product"
 	_repo "product-microservice/infrastructure/persistence/repository/db"
+
+	_createProduct "product-microservice/application/use_case/product/create_product"
+	_listProducts "product-microservice/application/use_case/product/list_products"
+	_showProduct "product-microservice/application/use_case/product/show_product"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -45,10 +48,14 @@ func main() {
 }
 
 func ProductRoute(route *gin.RouterGroup, req _http.Request, prdRepo _repoI.ProductRepository) {
-	ctHandler := _createProduct.NewCreateProductHandler(req, prdRepo)
+	cpHandler := _createProduct.NewCreateProductHandler(req, prdRepo)
+	lpHandler := _listProducts.NewListProductsHandler(req, prdRepo)
+	spHandler := _showProduct.NewShowProductHandler(req, prdRepo)
 
 	v1 := route.Group("/products")
 	{
-		v1.POST("/", ctHandler.CreateProduct)
+		v1.POST("/", cpHandler.CreateProductHandler)
+		v1.GET("/", lpHandler.ListProductsHandler)
+		v1.GET("/:id", spHandler.ShowProductHandler)
 	}
 }

@@ -29,18 +29,18 @@ func (p *productRepository) CreateProduct(ctx context.Context, product domain.Pr
 	return nil
 }
 
-func (p *productRepository) ListProducts(ctx context.Context) interface{} {
+func (p *productRepository) ListProducts(ctx context.Context) []domain.Product {
 	_products := []domain.Product{}
 
 	p.DB.Find(&_products)
 	return _products
 }
 
-func (p *productRepository) GetProductById(ctx context.Context, id string) (interface{}, error) {
+func (p *productRepository) GetProductById(ctx context.Context, id string) (domain.Product, error) {
 	product := domain.Product{}
 
 	if p.DB.First(&product, id).RecordNotFound() {
-		return nil, errors.New("Cannot find product with id " + id)
+		return product, errors.New("Cannot find product with id " + id)
 	}
 
 	return product, nil

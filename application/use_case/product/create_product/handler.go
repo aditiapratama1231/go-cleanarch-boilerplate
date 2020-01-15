@@ -1,13 +1,13 @@
 package create_product
 
 import (
+	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
 	"product-microservice/application/infrastructure"
-
-	domain "product-microservice/domain/entities"
+	"product-microservice/application/misc"
 
 	api "product-microservice/infrastructure/transport/http"
 )
@@ -24,33 +24,28 @@ func NewCreateProductHandler(request api.Request, prdRepo infrastructure.Product
 	}
 }
 
-func (handler *createProductHandler) CreateProduct(c *gin.Context) {
+func (handler *createProductHandler) CreateProductHandler(c *gin.Context) {
 	request := CreateProductRequest{}
 
+	ctx := c.Request.Context()
+	if ctx == nil {
+		ctx = context.Background()
+	}
+
 	if err := c.ShouldBind(&request); err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": err.Error(),
-		})
+		c.JSON(http.StatusInternalServerError, ResponseMapper(nil, err.Error(), false))
 		return
 	}
 
-	product := domain.Product{
-		ProductName:        request.Data.ProductName,
-		ProductDescription: request.Data.ProductDescription,
-		Quantity:           request.Data.Quantity,
-	}
+	product := RequestMapper(request)
 
-	err := handler.repository.CreateProduct(c, product)
+	err := handler.repository.CreateProduct(ctx, product)
 
 	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{
-			"message": "Error creating product" + err.Error(),
-		})
+		c.JSON(misc.GetErrorStatusCode(err), ResponseMapper(nil, err.Error(), false))
+		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{
-		"message": "product successfully created",
-	})
-
+	c.JSON(http.StatusCreated, ResponseMapper(&product, "Create product success", true))
 	return
 }

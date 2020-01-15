@@ -1,4 +1,4 @@
-package create_product
+package list_products
 
 import (
 	"product-microservice/application/infrastructure"
@@ -6,13 +6,13 @@ import (
 )
 
 type (
-	CreateTransactionResponse struct {
+	ListTransactionResponse struct {
 		infrastructure.BaseResponse
 	}
 )
 
-func ResponseMapper(domain *domain.Product, message string, success bool) CreateTransactionResponse {
-	return CreateTransactionResponse{
+func ResponseMapper(domain []domain.Product, message string, success bool) ListTransactionResponse {
+	return ListTransactionResponse{
 		BaseResponse: infrastructure.BaseResponse{
 			Success: success,
 			Message: message,
