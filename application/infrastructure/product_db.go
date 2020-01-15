@@ -1,11 +1,11 @@
-package product
+package infrastructure
 
 import (
 	"context"
-	"product-microservice/domain"
+	domain "product-microservice/domain/entities"
 )
 
-type Repository interface {
+type ProductRepository interface {
 	CreateProduct(context.Context, domain.Product) error
 	ListProducts(context.Context) interface{}
 	GetProductById(context.Context, string) (interface{}, error)

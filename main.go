@@ -5,10 +5,14 @@ import (
 	"log"
 	"os"
 
-	"product-microservice/config"
-	_productRepo "product-microservice/product/repository"
-	_productApi "product-microservice/product/transport/http/api"
-	_productUsecase "product-microservice/product/usecase"
+	// configs and interfaces
+	_repoI "product-microservice/application/infrastructure"
+	_db "product-microservice/infrastructure/persistence/repository/db"
+	_http "product-microservice/infrastructure/transport/http"
+
+	// actual class
+	_createProduct "product-microservice/application/use_case/product/create_product"
+	_repo "product-microservice/infrastructure/persistence/repository/db"
 
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
@@ -19,14 +23,13 @@ func main() {
 
 	v1 := router.Group("/api/v1") // initial route
 
-	db := config.DBInit() // initial db configuration
+	db := _db.DBInit() // initial db configuration
 
-	// register repo and usecase
-	productRepo := _productRepo.NewProductRepository(db)             // initial product repository
-	productUsecase := _productUsecase.NewProductUsecase(productRepo) // initial product usecase
+	api := _http.NewRequest("")
 
-	// register routing
-	_productApi.ProductRoute(v1, productUsecase)
+	// register product
+	productRepo := _repo.NewProductRepository(db)
+	ProductRoute(v1, api, productRepo)
 
 	e := godotenv.Load()
 	if e != nil {
@@ -39,4 +42,13 @@ func main() {
 	}
 
 	router.Run(":" + port)
+}
+
+func ProductRoute(route *gin.RouterGroup, req _http.Request, prdRepo _repoI.ProductRepository) {
+	ctHandler := _createProduct.NewCreateProductHandler(req, prdRepo)
+
+	v1 := route.Group("/products")
+	{
+		v1.POST("/", ctHandler.CreateProduct)
+	}
 }

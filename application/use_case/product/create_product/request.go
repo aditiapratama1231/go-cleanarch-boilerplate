@@ -1,4 +1,4 @@
-package request
+package create_product
 
 type (
 	CreateProductRequest struct {
