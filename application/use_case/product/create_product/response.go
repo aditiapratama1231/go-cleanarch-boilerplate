@@ -24,13 +24,6 @@ type (
 	}
 )
 
-func SetMessage(message string, success bool) base.BaseResponse {
-	return base.BaseResponse{
-		Message: message,
-		Success: success,
-	}
-}
-
 func SetResponse(domain domain.Product, message string, success bool) CreateProductResponse {
 	return CreateProductResponse{
 		BaseResponse: base.BaseResponse{

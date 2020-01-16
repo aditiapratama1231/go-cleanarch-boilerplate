@@ -8,6 +8,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	api "product-microservice/infrastructure/transport/http"
+
+	"github.com/refactory-id/go-core-package/response"
 )
 
 type showProductHandler struct {
@@ -32,7 +34,7 @@ func (handler *showProductHandler) ShowProductHandler(c *gin.Context) {
 
 	product, err := handler.prdRepository.GetProductById(ctx, id)
 	if err != nil {
-		c.JSON(misc.GetErrorStatusCode(err), SetMessage(err.Error(), false))
+		c.JSON(misc.GetErrorStatusCode(err), response.SetMessage(err.Error(), false))
 		return
 	}
 
