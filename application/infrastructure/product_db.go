@@ -6,7 +6,7 @@ import (
 )
 
 type ProductRepository interface {
-	CreateProduct(context.Context, domain.Product) error
+	CreateProduct(context.Context, domain.Product) (domain.Product, error)
 	ListProducts(context.Context) []domain.Product
 	GetProductById(context.Context, string) (domain.Product, error)
 }

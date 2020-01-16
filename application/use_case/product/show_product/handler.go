@@ -32,10 +32,9 @@ func (handler *showProductHandler) ShowProductHandler(c *gin.Context) {
 
 	product, err := handler.prdRepository.GetProductById(ctx, id)
 	if err != nil {
-		c.JSON(misc.GetErrorStatusCode(err), ResponseMapper(nil, err.Error(), false))
+		c.JSON(misc.GetErrorStatusCode(err), SetMessage(err.Error(), false))
 		return
 	}
 
-	c.JSON(http.StatusOK, ResponseMapper(&product, "Show product success", true))
-	return
+	c.JSON(http.StatusOK, SetResponse(product, "Show product success", true))
 }

@@ -8,5 +8,8 @@ require (
 	github.com/imroc/req v0.2.4
 	github.com/jinzhu/gorm v1.9.11
 	github.com/joho/godotenv v1.3.0
+	github.com/refactory-id/go-core-package v0.0.0-20200116080844-ca4aecbe72f3
 	github.com/sirupsen/logrus v1.2.0
+	gopkg.in/go-playground/validator.v8 v8.18.2
+	gopkg.in/go-playground/validator.v9 v9.29.1
 )

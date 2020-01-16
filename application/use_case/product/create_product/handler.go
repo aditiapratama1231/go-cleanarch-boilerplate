@@ -33,19 +33,21 @@ func (handler *createProductHandler) CreateProductHandler(c *gin.Context) {
 	}
 
 	if err := c.ShouldBind(&request); err != nil {
-		c.JSON(http.StatusInternalServerError, ResponseMapper(nil, err.Error(), false))
+		c.JSON(http.StatusInternalServerError, SetMessage(err.Error(), false))
 		return
 	}
 
-	product := RequestMapper(request)
+	if ok, err := ValidateRequest(&request); !ok {
+		c.JSON(http.StatusUnprocessableEntity, SetMessage(err.Error(), false))
+		return
+	}
 
-	err := handler.repository.CreateProduct(ctx, product)
+	prd, err := handler.repository.CreateProduct(ctx, RequestMapper(request))
 
 	if err != nil {
-		c.JSON(misc.GetErrorStatusCode(err), ResponseMapper(nil, err.Error(), false))
+		c.JSON(misc.GetErrorStatusCode(err), SetMessage(err.Error(), false))
 		return
 	}
 
-	c.JSON(http.StatusCreated, ResponseMapper(&product, "Create product success", true))
-	return
+	c.JSON(http.StatusCreated, SetResponse(prd, "Create product success", true))
 }

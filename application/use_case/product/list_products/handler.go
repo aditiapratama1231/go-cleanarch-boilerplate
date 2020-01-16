@@ -30,6 +30,6 @@ func (handler *listProductsHandler) ListProductsHandler(c *gin.Context) {
 
 	products := handler.prdRepository.ListProducts(ctx)
 
-	c.JSON(http.StatusOK, ResponseMapper(products, "List Products Success", true))
+	c.JSON(http.StatusOK, SetResponse(products, "List Products Success", true))
 	return
 }

@@ -19,14 +19,14 @@ func NewProductRepository(DB *gorm.DB) infrastructure.ProductRepository {
 	}
 }
 
-func (p *productRepository) CreateProduct(ctx context.Context, product domain.Product) error {
+func (p *productRepository) CreateProduct(ctx context.Context, product domain.Product) (domain.Product, error) {
 	err := p.DB.Create(&product).Error
 
 	if err != nil {
-		return err
+		return product, err
 	}
 
-	return nil
+	return product, nil
 }
 
 func (p *productRepository) ListProducts(ctx context.Context) []domain.Product {

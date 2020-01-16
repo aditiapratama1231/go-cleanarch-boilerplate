@@ -3,7 +3,7 @@ package misc
 import (
 	"net/http"
 
-	_error "product-microservice/application/infrastructure"
+	_error "github.com/refactory-id/go-core-package/exceptions"
 
 	"github.com/sirupsen/logrus"
 )
